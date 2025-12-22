@@ -29,19 +29,19 @@ const todos: Todo[] = [
 
 const TodoUI = () => {
   return (
-    <div className="w-full pt-20 flex flex-col items-center gap-8">
+    <div className="pt-20 space-y-5">
       <div className="text-center space-y-1">
         <h1 className="text-2xl sm:text-4xl font-bold">Welcome User</h1>
         <p className="sm:text-lg text-muted-foreground">Start Adding Todos!</p>
       </div>
-      <Card className="w-full max-w-xl mx-auto">
+      <Card className="w-full max-w-xl mx-auto shadow-lg">
         <CardContent className="space-y-6">
-          <div className="flex items-center gap-2">
+          <form className="flex items-center gap-2">
             <Input type="text" placeholder="Add a new task" />
             <Button variant={"outline"}>Add</Button>
-          </div>
+          </form>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 max-h-80 overflow-y-scroll">
             {todos.map((todo) => (
               <TodosCard key={todo.id} content={todo.content} />
             ))}
