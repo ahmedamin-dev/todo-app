@@ -1,6 +1,13 @@
 import SigninButton from "@/components/SigninButton";
+import { Button } from "@/components/ui/button";
+import { getServerSession } from "@/lib/getSession";
+import Link from "next/link";
 
-const Home = () => {
+const Home = async () => {
+  const session = await getServerSession();
+
+  const user = session?.user;
+
   return (
     <section className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col items-center gap-6 p-4">
@@ -13,7 +20,13 @@ const Home = () => {
           </p>
         </div>
 
-        <SigninButton />
+        {user ? (
+          <Button variant={"outline"} asChild>
+            <Link href={"/todo"}>Go to the App</Link>
+          </Button>
+        ) : (
+          <SigninButton />
+        )}
       </div>
     </section>
   );

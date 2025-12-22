@@ -1,9 +1,13 @@
-import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "./ui/mode-toggle";
-import { Button } from "./ui/button";
+import LogoutButton from "./LogoutButton";
+import { getServerSession } from "@/lib/getSession";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await getServerSession();
+  const user = session?.user;
+
+  if (!user) return null;
   return (
     <header className="border-b px-4">
       <nav className="flex items-center justify-between w-full max-w-5xl mx-auto py-4">
@@ -12,10 +16,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <Button variant={"outline"}>
-            Logout
-            <LogOutIcon />
-          </Button>
+          <LogoutButton />
         </div>
       </nav>
     </header>
