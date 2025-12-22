@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
+import SigninButton from "@/components/SigninButton";
 
 const Home = () => {
   return (
@@ -14,11 +13,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div>
-          <Button variant={"outline"}>
-            <FcGoogle size={18} /> Continue with Google
-          </Button>
-        </div>
+        <SigninButton />
       </div>
     </section>
   );
