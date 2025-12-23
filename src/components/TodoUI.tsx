@@ -87,6 +87,7 @@ const TodoUI = () => {
                 key={todo.id}
                 todoId={todo.id}
                 content={todo.content}
+                completed={todo.completed}
                 todos={todos}
                 setTodos={setTodos}
               />
