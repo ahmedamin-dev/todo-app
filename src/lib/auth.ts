@@ -1,13 +1,15 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: "sqlite",
+    provider: "postgresql",
   }),
   baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: ["https://fakarny-omega.vercel.app/"],
+  trustedOrigins: ["https://fakarny-omega.vercel.app"],
+  plugins: [nextCookies()],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
