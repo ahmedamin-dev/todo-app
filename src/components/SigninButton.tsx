@@ -20,7 +20,6 @@ const SigninButton = () => {
     } catch (error) {
       console.log(error);
       toast.error("Failed to sign in");
-    } finally {
       setIsLoading(false);
     }
   };
