@@ -1,3 +1,4 @@
+import { getServerSession } from "@/lib/getSession";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -9,8 +10,18 @@ export async function PATCH(
     const body = await req.json();
     const { content, completed } = body;
     const { todoId } = await params;
+    const session = await getServerSession();
 
-    const todo = await prisma.todo.findUnique({ where: { id: todoId } });
+    if (!session) {
+      return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
+
+    const todo = await prisma.todo.findUnique({
+      where: {
+        userId: session.user.id,
+        id: todoId,
+      },
+    });
 
     if (!todo) {
       return NextResponse.json({ message: "todo not found" }, { status: 404 });
@@ -46,9 +57,17 @@ export async function DELETE(
   }
 ) {
   try {
+    const session = await getServerSession();
+
+    if (!session) {
+      return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
+
     const { todoId } = await params;
 
-    const todo = await prisma.todo.findUnique({ where: { id: todoId } });
+    const todo = await prisma.todo.findUnique({
+      where: { id: todoId, userId: session.user.id },
+    });
 
     if (!todo) {
       return NextResponse.json({ message: "todo not found" }, { status: 404 });

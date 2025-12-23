@@ -1,16 +1,40 @@
+import { getServerSession } from "@/lib/getSession";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const todos = await prisma.todo.findMany();
+  try {
+    const session = await getServerSession();
 
-  return NextResponse.json(todos, { status: 200 });
+    if (!session) {
+      return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
+
+    const todos = await prisma.todo.findMany({
+      where: {
+        userId: session?.user.id,
+      },
+    });
+
+    return NextResponse.json(todos, { status: 200 });
+  } catch (error) {
+    console.error("failed to fetch todos", error);
+    return NextResponse.json(
+      { message: "failed to fetch todos" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession();
     const body = await req.json();
     const { content } = body;
+
+    if (!session) {
+      return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
 
     if (!content.trim()) {
       return NextResponse.json(
@@ -21,6 +45,7 @@ export async function POST(req: Request) {
 
     const newTodo = await prisma.todo.create({
       data: {
+        userId: session.user.id,
         content,
       },
     });
