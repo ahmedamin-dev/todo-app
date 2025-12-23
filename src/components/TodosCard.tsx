@@ -1,15 +1,11 @@
 "use client";
 
-import { DeleteIcon, EditIcon } from "lucide-react";
+import { DeleteIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
-
-type Todo = {
-  id: string;
-  content: string;
-  completed: boolean;
-};
+import { Todo } from "@/types/todo";
+import EditDialog from "./EditDialog";
 
 type Props = {
   todoId: string;
@@ -43,14 +39,7 @@ const TodosCard = ({ content, todoId, todos, setTodos }: Props) => {
       </div>
 
       <div className="flex gap-2">
-        <Button
-          size={"icon"}
-          variant={"outline"}
-          title="edit"
-          className="cursor-pointer"
-        >
-          <EditIcon />
-        </Button>
+        <EditDialog />
         <Button
           variant={"outline"}
           size={"icon"}

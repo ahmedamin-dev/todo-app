@@ -5,12 +5,7 @@ import TodosCard from "./TodosCard";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
-
-type Todo = {
-  id: string;
-  content: string;
-  completed: boolean;
-};
+import { Todo } from "@/types/todo";
 
 const TodoUI = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
