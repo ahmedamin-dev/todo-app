@@ -1,9 +1,6 @@
 "use client";
 
-import { DeleteIcon } from "lucide-react";
-import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import { toast } from "sonner";
 import { Todo } from "@/types/todo";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";

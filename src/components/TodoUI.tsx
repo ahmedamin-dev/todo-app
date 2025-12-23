@@ -6,10 +6,12 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Todo } from "@/types/todo";
+import { authClient } from "@/lib/auth-client";
 
 const TodoUI = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [content, setContent] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
@@ -39,20 +41,33 @@ const TodoUI = () => {
   };
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      const res = await fetch("/api/todos");
-      const data = await res.json();
-      setTodos(data);
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/todos");
+        const data = await res.json();
+        setTodos(data);
+
+        const session = await authClient.getSession();
+        const user = session.data?.user;
+
+        if (user?.name) {
+          setUsername(user.name);
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
     };
 
-    fetchTodos();
+    fetchData();
   }, []);
 
   return (
     <div className="pt-20 space-y-5">
       <div className="text-center space-y-1">
-        <h1 className="text-2xl sm:text-4xl font-bold">Welcome User</h1>
-        <p className="sm:text-lg text-muted-foreground">Start Adding Todos!</p>
+        <h1 className="text-3xl sm:text-4xl font-bold">Welcome {username}</h1>
+        <p className="sm:text-lg text-muted-foreground">
+          Let&apos;s get some work done!
+        </p>
       </div>
       <Card className="w-full max-w-xl mx-auto shadow-lg">
         <CardContent className="space-y-6">
