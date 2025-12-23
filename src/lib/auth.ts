@@ -7,7 +7,7 @@ export const auth = betterAuth({
     provider: "sqlite",
   }),
   baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: [process.env.BETTER_AUTH_URL as string],
+  trustedOrigins: ["https://fakarny-omega.vercel.app/"],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
