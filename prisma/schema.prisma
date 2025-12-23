@@ -11,6 +11,11 @@ model Todo {
   id        String  @id @default(uuid())
   content   String
   completed Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -23,6 +28,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  todos         Todo[]
 
   @@unique([email])
   @@map("user")
