@@ -39,7 +39,11 @@ const TodosCard = ({ content, todoId, todos, setTodos }: Props) => {
       </div>
 
       <div className="flex gap-2">
-        <EditDialog />
+        <EditDialog
+          todoId={todoId}
+          initialContent={content}
+          setTodos={setTodos}
+        />
         <Button
           variant={"outline"}
           size={"icon"}

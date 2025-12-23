@@ -13,12 +13,46 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
+import { ChangeEvent, useState } from "react";
+import { toast } from "sonner";
+import { Todo } from "@/types/todo";
 
-const EditDialog = () => {
-  console.log("EditDialog rendered");
+type Props = {
+  initialContent: string;
+  todoId: string;
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+};
+
+const EditDialog = ({ todoId, setTodos, initialContent }: Props) => {
+  const [content, setContent] = useState<string>(initialContent);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
+
+  const handleEdit = async () => {
+    const res = await fetch(`/api/todos/${todoId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Error updating task");
+    }
+
+    if (res.ok) {
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === todoId ? { ...todo, content } : todo))
+      );
+      toast.success("Task updated successfully");
+      setIsOpen(false);
+    }
+  };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -40,14 +74,16 @@ const EditDialog = () => {
         <div className="grid gap-4">
           <div className="grid gap-3">
             <label htmlFor="task">Task</label>
-            <Input id="task" />
+            <Input id="task" value={content} onChange={handleChange} />
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={handleEdit}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
