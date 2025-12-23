@@ -6,6 +6,7 @@ import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
 import { Todo } from "@/types/todo";
 import EditDialog from "./EditDialog";
+import DeleteDialog from "./DeleteDialog";
 
 type Props = {
   todoId: string;
@@ -15,20 +16,6 @@ type Props = {
 };
 
 const TodosCard = ({ content, todoId, todos, setTodos }: Props) => {
-  const handleDelete = async () => {
-    const res = await fetch(`/api/todos/${todoId}`, {
-      method: "DELETE",
-    });
-
-    if (!res.ok) {
-      throw new Error("Error deleting todo");
-    }
-
-    if (res.ok) {
-      toast.success("Task deleted successfully");
-      setTodos(todos.filter((todo) => todo.id !== todoId));
-    }
-  };
   return (
     <div className="border rounded-xl flex items-center justify-between p-4">
       <div className="flex items-center gap-3">
@@ -44,15 +31,7 @@ const TodosCard = ({ content, todoId, todos, setTodos }: Props) => {
           initialContent={content}
           setTodos={setTodos}
         />
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          title="delete"
-          onClick={handleDelete}
-          className="cursor-pointer"
-        >
-          <DeleteIcon className="text-red-500" />
-        </Button>
+        <DeleteDialog setTodos={setTodos} todoId={todoId} todos={todos} />
       </div>
     </div>
   );
