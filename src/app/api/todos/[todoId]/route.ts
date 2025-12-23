@@ -16,10 +16,10 @@ export async function PATCH(
       return NextResponse.json({ message: "unauthorized" }, { status: 401 });
     }
 
-    const todo = await prisma.todo.findUnique({
+    const todo = await prisma.todo.findFirst({
       where: {
-        userId: session.user.id,
         id: todoId,
+        userId: session.user.id,
       },
     });
 
@@ -37,7 +37,7 @@ export async function PATCH(
 
     return NextResponse.json(
       { message: "todo updated successfully", updatedTodo },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("error updating todo", error);
@@ -65,7 +65,7 @@ export async function DELETE(
 
     const { todoId } = await params;
 
-    const todo = await prisma.todo.findUnique({
+    const todo = await prisma.todo.findFirst({
       where: { id: todoId, userId: session.user.id },
     });
 

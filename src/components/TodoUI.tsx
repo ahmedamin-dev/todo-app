@@ -12,13 +12,25 @@ const TodoUI = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [content, setContent] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
+    if (content.length > 0) setError(false);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setLoading(true);
+
+    if (!content.trim()) {
+      setError(true);
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/todos", {
         method: "POST",
@@ -27,17 +39,20 @@ const TodoUI = () => {
       });
 
       if (!res.ok) {
+        setLoading(false);
         throw new Error("error creating todo");
       }
 
       if (res.ok) {
         const data = await res.json();
         setTodos([...todos, data.newTodo]);
+        setError(false);
       }
     } catch (error) {
       console.error(error);
     }
     setContent("");
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -76,10 +91,22 @@ const TodoUI = () => {
               type="text"
               placeholder="Add a new task"
               value={content}
+              aria-invalid={error}
               onChange={handleChange}
             />
-            <Button variant={"outline"}>Add</Button>
+            <Button
+              variant={"outline"}
+              disabled={loading}
+              className="disabled:bg-muted-foreground"
+            >
+              Add
+            </Button>
           </form>
+          {error && (
+            <div role="alert" className="text-red-500 text-center">
+              You must enter a valid Task
+            </div>
+          )}
 
           <div className="flex flex-col gap-3 max-h-80 overflow-y-scroll">
             {todos.map((todo) => (

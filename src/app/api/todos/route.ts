@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { meesage: "Todo created successfully", newTodo },
+      { message: "Todo created successfully", newTodo },
       { status: 201 }
     );
   } catch (error) {
