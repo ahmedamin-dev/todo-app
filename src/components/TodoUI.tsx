@@ -6,30 +6,33 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Todo } from "@/types/todo";
-import { authClient } from "@/lib/auth-client";
 
-const TodoUI = () => {
+type Props = {
+  user: { name: string };
+};
+
+const TodoUI = ({ user }: Props) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [content, setContent] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value);
-    if (content.length > 0) setError(false);
+    const value = e.target.value;
+    setContent(value);
+    if (value.trim().length > 0) setError(false);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setLoading(true);
 
     if (!content.trim()) {
       setError(true);
       setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/todos", {
@@ -61,13 +64,6 @@ const TodoUI = () => {
         const res = await fetch("/api/todos");
         const data = await res.json();
         setTodos(data);
-
-        const session = await authClient.getSession();
-        const user = session.data?.user;
-
-        if (user?.name) {
-          setUsername(user.name);
-        }
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -79,7 +75,7 @@ const TodoUI = () => {
   return (
     <div className="pt-20 space-y-5">
       <div className="text-center space-y-1">
-        <h1 className="text-3xl sm:text-4xl font-bold">Welcome {username}</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold">Welcome {user.name}</h1>
         <p className="sm:text-lg text-muted-foreground">
           Let&apos;s get some work done!
         </p>

@@ -11,7 +11,7 @@ const TodoPage = async () => {
   }
   return (
     <>
-      <TodoUI />
+      <TodoUI user={user} />
     </>
   );
 };
